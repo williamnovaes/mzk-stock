@@ -11,7 +11,6 @@ import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClient;
-import io.vertx.ext.web.codec.BodyCodec;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 
@@ -26,21 +25,6 @@ public class TestMainVerticle {
 		vertx.deployVerticle(new MainVerticle(), testContext.succeeding(id -> testContext.completeNow()));
 	}
 
-	@Test
-	void verticleDeployed(VertxTestContext testContext) throws Throwable {
-		WebClient client = WebClient.create(vertx);
-		
-		client.get(8080, "localhost", "/")
-			.as(BodyCodec.string())
-			.send(testContext.succeeding(resp -> {
-				testContext.verify(() -> {
-					assertThat(resp.statusCode()).isEqualTo(200);
-					assertThat(resp.body()).contains("Welcome");
-					testContext.completeNow();
-				});
-			}));
-	}
-	
 	@Test
 	void testInserirComJsonInvalido(VertxTestContext testContext) throws Throwable {
 		WebClient client = WebClient.create(vertx);

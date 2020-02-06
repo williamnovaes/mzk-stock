@@ -29,13 +29,13 @@ public class MainVerticle extends AbstractVerticle {
 		router.route("/").handler(routingContext -> {
 			HttpServerResponse response = routingContext.response();
 			response.putHeader("content-type", "text/html")
-			.end("<h3>Welcome to MZK Stock</h3>");
+			.end("<h3>Welcome to Stock MZK</h3>");
 		});
 		
 		router.route("/api*").handler(BodyHandler.create());
 		router.get("/api/listar").handler(this::listar);
 		router.post("/api/incluir").handler(this::incluir);
-		router.post("/api/baixar").handler(this::baixar);
+		router.post("/api/excluir").handler(this::excluir);
 		
 		vertx.createHttpServer()
 			.requestHandler(router)
@@ -70,7 +70,7 @@ public class MainVerticle extends AbstractVerticle {
 		}
 	}
 	
-	private void baixar(RoutingContext context) {
+	private void excluir(RoutingContext context) {
 		try {
 			List<JsonObject> jsonProdutos = validateJson(context);
 			List<Integer> indicesRemover = new ArrayList<>();

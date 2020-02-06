@@ -21,20 +21,36 @@ To run your application:
 java -jar target\stockmzk-1.0.0-SNAPSHOT-fat.jar
 ```
 
+== End Points
+```
+
+listar 	= /api/listar
+incluir	= /api/incluir
+excluir	= /api/incluir
+```
+
 == Valid JSON
 ```
 [
 	{
 		"nome" : "produto",
-		"codigo_barras" : "nuermo",
-		"numero_serie" : "numero"
+		"codigo_barras" : "1234",
+		"numero_serie" : "1"
 	}
 ]
 ```
 
 == Invalid JSON
 ```
+[
+	{
+		"nome" : "produto",
+		"numero_serie" : "123"
+	}
+]
+
 ```
+
 == Help
 
 * https://vertx.io/docs/[Vert.x Documentation]
