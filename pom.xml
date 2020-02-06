@@ -18,6 +18,8 @@
 
     <vertx.version>3.8.5</vertx.version>
     <junit-jupiter.version>5.4.0</junit-jupiter.version>
+    <junit-platform-surefire-provider.version>1.0.1</junit-platform-surefire-provider.version>
+    <assertj-core.version>3.8.0</assertj-core.version>
 
     <main.verticle>stockmzk.MainVerticle</main.verticle>
   </properties>
@@ -35,10 +37,14 @@
   </dependencyManagement>
 
   <dependencies>
-    <dependency>
+ 	<dependency>
       <groupId>io.vertx</groupId>
-      <artifactId>vertx-unit</artifactId>
+      <artifactId>vertx-core</artifactId>
     </dependency>
+    <dependency>
+    	<groupId>io.vertx</groupId>
+    	<artifactId>vertx-web-client</artifactId>
+	</dependency>
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-web-api-contract</artifactId>
@@ -48,7 +54,13 @@
       <artifactId>vertx-junit5</artifactId>
       <scope>test</scope>
     </dependency>
-
+    
+     <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
@@ -57,8 +69,20 @@
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>${junit-jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
       <version>${junit-jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj-core.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

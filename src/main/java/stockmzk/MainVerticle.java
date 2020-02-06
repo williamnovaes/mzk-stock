@@ -2,7 +2,6 @@ package stockmzk;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.AbstractVerticle;
@@ -30,7 +29,7 @@ public class MainVerticle extends AbstractVerticle {
 		router.route("/").handler(routingContext -> {
 			HttpServerResponse response = routingContext.response();
 			response.putHeader("content-type", "text/html")
-			.end("<h1>Hello to MZK Stock</h1>");
+			.end("<h3>Welcome to MZK Stock</h3>");
 		});
 		
 		router.route("/api*").handler(BodyHandler.create());
@@ -51,7 +50,7 @@ public class MainVerticle extends AbstractVerticle {
 	}
 	
 	private void listar(RoutingContext context) {
-		if (produtos == null || produtos.size() == 0) {
+		if (produtos == null || produtos.isEmpty()) {
 			response(context, getMensagemRetorno("Não há produtos disponíveis"));
 		} else {
 			response(context, Json.encode(produtos));
@@ -60,23 +59,22 @@ public class MainVerticle extends AbstractVerticle {
 	
 	private void incluir(RoutingContext context) {
 		List<JsonObject> produtosAdicionar = validateJson(context);
-		
-		if (produtosAdicionar != null && produtosAdicionar.size() > 0) {
+
+		if (produtosAdicionar != null && !produtosAdicionar.isEmpty()) {
 			for (int i = 0; i < produtosAdicionar.size(); i++) {
 				if (verificarProdutoJaAdicionado(produtosAdicionar.get(i)) == null) {
 					produtos.add(produtosAdicionar.get(i));
 				}
 			}
-			response(context, getMensagemRetorno("Produtos incluídos com sucesso"));
+			response(context, Json.encode(produtos));
 		}
 	}
 	
 	private void baixar(RoutingContext context) {
 		try {
 			List<JsonObject> jsonProdutos = validateJson(context);
-			
 			List<Integer> indicesRemover = new ArrayList<>();
-			if (jsonProdutos != null && jsonProdutos.size() > 0) {
+			if (jsonProdutos != null && !jsonProdutos.isEmpty()) {
 				for (int i = 0; i < jsonProdutos.size(); i++) { 
 					Integer indice = verificarProdutoJaAdicionado(jsonProdutos.get(i));
 					if (indice != null) {
@@ -85,14 +83,14 @@ public class MainVerticle extends AbstractVerticle {
 				}
 			}
 			
+			if (indicesRemover != null && !indicesRemover.isEmpty())
 			for (int indice : indicesRemover) {
 				produtos.remove(indice);
 			}
+			response(context, Json.encode(produtos));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		response(context, getMensagemRetorno("Produtos baixados com sucesso"));
 	}
 	
 	private Integer verificarProdutoJaAdicionado(JsonObject produto) {
@@ -124,17 +122,21 @@ public class MainVerticle extends AbstractVerticle {
 						&& produto.containsKey("numero_serie") && isValorValido(produto.getString("numero_serie"))) {
 					produtosJson.add(produto);
 				} else {
-					response(context, getMensagemRetorno("Os produtos devem conter nome, codigo de barras e número de serie"));
+					throw new Exception("Os produtos devem conter nome, codigo de barras e número de serie");
 				}
 			}
+			return produtosJson;
 		} catch (Exception e) {
-			response(context, getMensagemRetorno(e.getMessage()));
+			context.response()
+				.setStatusCode(HttpResponseStatus.BAD_REQUEST.code())
+				.putHeader(CONTENT_TYPE, APPLICATION_JSON)
+				.end();
+			return null;
 		}
-		return produtosJson;
 	}
 	
 	private boolean isValorValido(String valor) {
-		return valor != null && !valor.isEmpty();
+		return valor != null && !valor.trim().isEmpty();
 	}
 	
 	private String getMensagemRetorno(String mensagem) {

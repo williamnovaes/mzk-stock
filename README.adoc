@@ -1,4 +1,4 @@
-= Stockmzk
+= Stock-mzk
 
 image:https://img.shields.io/badge/vert.x-3.8.5-purple.svg[link="https://vertx.io"]
 
@@ -8,19 +8,33 @@ This application was generated using http://start.vertx.io
 
 To launch your tests:
 ```
-./mvnw clean test
+mvn clean test
 ```
 
 To package your application:
 ```
-./mvnw clean package
+mvn clean package
 ```
 
 To run your application:
 ```
-./mvnw clean compile exec:java
+java -jar target\stockmzk-1.0.0-SNAPSHOT-fat.jar
 ```
 
+== Valid JSON
+```
+[
+	{
+		"nome" : "produto",
+		"codigo_barras" : "nuermo",
+		"numero_serie" : "numero"
+	}
+]
+```
+
+== Invalid JSON
+```
+```
 == Help
 
 * https://vertx.io/docs/[Vert.x Documentation]
